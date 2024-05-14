@@ -7,5 +7,5 @@ import com.chatop.api.model.Message;
 
 @Repository
 public interface MessageRepository extends CrudRepository<Message, Long>{
-
+    
 }

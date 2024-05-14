@@ -31,10 +31,10 @@ public class Rental {
 
     private String description;
 
+    /* References to User id */
     @ManyToOne
-    @JoinColumn(name="user_id")
-    @Column(name="owner_id")
-    private Long ownerId;
+    @JoinColumn(name="owner_id")
+    private User user;
 
     @Column(name="created_at")
     private Timestamp createdAt;
