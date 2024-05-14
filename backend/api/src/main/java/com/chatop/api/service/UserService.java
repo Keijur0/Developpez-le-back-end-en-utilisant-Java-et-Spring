@@ -23,12 +23,12 @@ public class UserService {
         return createdUser;
     }
 
-    /* Read user */
+    /* Get user by id */
     public Optional<User> getUser(final Long id) {
         return userRepository.findById(id);
     }
 
-    /* Delete user */
+    /* Delete user by id */
     public void deleteUser(final Long id) {
         userRepository.deleteById(id);
     }
