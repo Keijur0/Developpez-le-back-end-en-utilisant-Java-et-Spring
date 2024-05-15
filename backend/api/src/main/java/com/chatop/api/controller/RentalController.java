@@ -2,8 +2,14 @@ package com.chatop.api.controller;
 
 import java.util.Optional;
 
+import javax.swing.text.html.Option;
+
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chatop.api.model.Rental;
@@ -16,14 +22,14 @@ public class RentalController {
     private RentalService rentalservice;
 
     /* Get all rentals */
-    @GetMapping("/rentals")
-    public Iterable<Rental> getRentals() {
-        return rentalservice.getRentals();
+    @GetMapping("api/rentals")
+    public ResponseEntity<Iterable<Rental>> getRentals() {
+        return ResponseEntity.status(HttpStatus.OK).body(rentalservice.getRentals());
     }
 
     /* Get rental by id */
-    @GetMapping("/rental/{id}")
-    public Optional<Rental> getRental(final Long id) {
-        return rentalservice.getRental(id);
+    @GetMapping("api/rentals/{id}")
+    public ResponseEntity<Optional<Rental>> getRental(@PathVariable final Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(rentalservice.getRental(id));
     }
 }

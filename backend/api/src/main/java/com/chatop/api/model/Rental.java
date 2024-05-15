@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,7 +35,7 @@ public class Rental {
     /* References to User id */
     @ManyToOne
     @JoinColumn(name="owner_id")
-    private User user;
+    private User ownerId;
 
     @Column(name="created_at")
     private Timestamp createdAt;

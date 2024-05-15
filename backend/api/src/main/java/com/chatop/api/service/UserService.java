@@ -24,7 +24,7 @@ public class UserService {
     }
 
     /* Get user by id */
-    public Optional<User> getUser(final Long id) {
+    public Optional<User> getUserById(final Long id) {
         return userRepository.findById(id);
     }
 
@@ -38,4 +38,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    /* Get user by email */
+    public Optional<User> getUserByEmail(final String email) {
+        return userRepository.findByEmail(email);
+    }
 }
