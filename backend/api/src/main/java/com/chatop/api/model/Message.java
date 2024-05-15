@@ -21,15 +21,15 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /* References to Rental id */
     @ManyToOne
     @JoinColumn(name="rental_id")
-    @Column(name="rental_id")
-    private Long rentalId;
+    private Rental rental;
 
+    /* References to User id */
     @ManyToOne
     @JoinColumn(name="user_id")
-    @Column(name="user_id")
-    private Long userId;
+    private User user;
 
     private String message;
 
