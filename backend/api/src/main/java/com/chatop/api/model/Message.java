@@ -29,7 +29,7 @@ public class Message {
     /* References to User id */
     @ManyToOne
     @JoinColumn(name="user_id")
-    private User user;
+    private UserEntity user;
 
     private String message;
 

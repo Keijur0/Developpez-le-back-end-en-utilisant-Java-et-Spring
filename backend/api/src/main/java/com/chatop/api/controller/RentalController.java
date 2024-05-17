@@ -2,9 +2,6 @@ package com.chatop.api.controller;
 
 import java.util.Optional;
 
-import javax.swing.text.html.Option;
-
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +19,13 @@ public class RentalController {
     private RentalService rentalservice;
 
     /* Get all rentals */
-    @GetMapping("api/rentals")
+    @GetMapping("/api/rentals")
     public ResponseEntity<Iterable<Rental>> getRentals() {
         return ResponseEntity.status(HttpStatus.OK).body(rentalservice.getRentals());
     }
 
     /* Get rental by id */
-    @GetMapping("api/rentals/{id}")
+    @GetMapping("/api/rentals/{id}")
     public ResponseEntity<Optional<Rental>> getRental(@PathVariable final Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(rentalservice.getRental(id));
     }

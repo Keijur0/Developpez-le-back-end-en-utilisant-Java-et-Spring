@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.chatop.api.model.User;
+import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.UserRepository;
 
 import lombok.Data;
@@ -18,13 +18,13 @@ public class UserService {
     private UserRepository userRepository;
 
     /* Create/Update user */
-    public User saveUser (User user) {
-        User createdUser = userRepository.save(user);
+    public UserEntity saveUser (UserEntity user) {
+        UserEntity createdUser = userRepository.save(user);
         return createdUser;
     }
 
     /* Get user by id */
-    public Optional<User> getUserById(final Long id) {
+    public Optional<UserEntity> getUserById(final Long id) {
         return userRepository.findById(id);
     }
 
@@ -34,12 +34,12 @@ public class UserService {
     }
 
     /* Get all users */
-    public Iterable<User> getUsers() {
+    public Iterable<UserEntity> getUsers() {
         return userRepository.findAll();
     }
 
     /* Get user by email */
-    public Optional<User> getUserByEmail(final String email) {
+    public Optional<UserEntity> getUserByEmail(final String email) {
         return userRepository.findByEmail(email);
     }
 }
