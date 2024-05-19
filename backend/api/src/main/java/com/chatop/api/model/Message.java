@@ -23,12 +23,12 @@ public class Message {
 
     /* References to Rental id */
     @ManyToOne
-    @JoinColumn(name="rental_id")
+    @JoinColumn(name="rental_id", referencedColumnName = "id")
     private Rental rental;
 
     /* References to User id */
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_id", referencedColumnName = "id")
     private UserEntity user;
 
     private String message;

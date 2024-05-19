@@ -2,20 +2,19 @@ package com.chatop.api.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.chatop.api.model.Rental;
 import com.chatop.api.repository.RentalRepository;
 
-import lombok.Data;
-
-@Data
 @Service
 public class RentalService {
 
-    @Autowired
     private RentalRepository rentalRepository;
+
+    public RentalService(RentalRepository rentalRepository) {
+        this.rentalRepository = rentalRepository;
+    }
 
     /* Get rental by id */
     public Optional<Rental> getRental(final Long id) {

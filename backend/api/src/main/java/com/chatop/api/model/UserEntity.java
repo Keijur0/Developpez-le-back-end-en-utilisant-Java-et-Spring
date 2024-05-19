@@ -34,5 +34,5 @@ public class UserEntity {
     private Timestamp updatedAt;
 
     @Transient
-    private String role;
+    private final String role = "USER";
 }

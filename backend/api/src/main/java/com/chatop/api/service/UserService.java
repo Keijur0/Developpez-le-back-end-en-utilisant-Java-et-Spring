@@ -2,20 +2,20 @@ package com.chatop.api.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.UserRepository;
 
-import lombok.Data;
 
-@Data
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     /* Create/Update user */
     public UserEntity saveUser (UserEntity user) {

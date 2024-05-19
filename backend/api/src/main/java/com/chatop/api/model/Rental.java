@@ -33,7 +33,7 @@ public class Rental {
 
     /* References to User id */
     @ManyToOne
-    @JoinColumn(name="owner_id")
+    @JoinColumn(name="owner_id", referencedColumnName = "id")
     private UserEntity ownerId;
 
     @Column(name="created_at")
