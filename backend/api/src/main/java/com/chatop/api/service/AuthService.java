@@ -1,14 +1,17 @@
 package com.chatop.api.service;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.chatop.api.dto.LoginDto;
-import com.chatop.api.model.AuthenticationResponse;
+import com.chatop.api.model.AuthResponse;
 import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.UserRepository;
 
@@ -33,7 +36,7 @@ public class AuthService {
     }
 
     /* Register user */
-    public AuthenticationResponse register(UserEntity userDto) {
+    public Map<String, String> register(UserEntity userDto) {
         /* Check email (must be unique) */
         if(!userRepository.findByEmail(userDto.getEmail()).isEmpty()) {
             return null;
@@ -63,21 +66,44 @@ public class AuthService {
         /* Generating token */
         String token = jwtService.generateToken(user);
 
-        return new AuthenticationResponse(token);
+        /* Formatting return value for response */
+        Map<String, String> registerReponse = new HashMap<>();
+        registerReponse.put("token", token);
+
+        return registerReponse;
     }
 
     /* Login user */
-    public AuthenticationResponse login(LoginDto userDto) {
+    public Map<String, String> login(LoginDto userDto) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 userDto.getEmail(), 
                 userDto.getPassword())
         );
 
+        /* Checking if user is matching with db */
         UserEntity user = userRepository.findByEmail(userDto.getEmail()).orElseThrow();
         String token = jwtService.generateToken(user);
 
-        return new AuthenticationResponse(token);
+        /* Formatting return value for response */
+        Map<String, String> loginResponse = new HashMap<>();
+        loginResponse.put("token", token);
+        return loginResponse;
+    }
+
+    public Map<String, Object> me(String authorization) {
+        String token = authorization.substring(7);
+        String email = jwtService.extractUsername(token);
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
+
+        Map<String, Object> meResponse = new HashMap<>();
+        meResponse.put("id", user.getId());
+        meResponse.put("name", user.getName());
+        meResponse.put("email", user.getEmail());
+        meResponse.put("created_at", user.getCreatedAt());
+        meResponse.put("updated_at", user.getUpdatedAt());
+
+        return meResponse;
     }
 
 }

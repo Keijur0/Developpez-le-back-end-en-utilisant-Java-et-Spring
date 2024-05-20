@@ -1,5 +1,6 @@
 package com.chatop.api.controller;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,8 @@ public class RentalController {
 
     /* Get all rentals */
     @GetMapping("/api/rentals")
-    public ResponseEntity<Iterable<Rental>> getRentals() {
-        return ResponseEntity.status(HttpStatus.OK).body(rentalservice.getRentals());
+    public ResponseEntity<Map<String, Iterable<Rental>>> getRentals() {
+        return ResponseEntity.ok(rentalservice.getRentals());
     }
 
     /* Get rental by id */

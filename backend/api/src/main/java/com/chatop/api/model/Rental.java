@@ -34,11 +34,9 @@ public class Rental {
     /* References to User id */
     @ManyToOne
     @JoinColumn(name="owner_id", referencedColumnName = "id")
-    private UserEntity ownerId;
+    private UserEntity user;
 
-    @Column(name="created_at")
-    private Timestamp createdAt;
+    private Timestamp created_at;
 
-    @Column(name="updated_at")
-    private Timestamp updatedAt;
+    private Timestamp updated_at;
 }

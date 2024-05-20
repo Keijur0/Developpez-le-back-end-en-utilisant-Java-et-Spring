@@ -1,9 +1,14 @@
 package com.chatop.api.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,19 +30,19 @@ public class AuthController {
 
     /* Login user */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
-        return ResponseEntity.ok("token: "+authService.login(loginDto).getToken());
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto) {
+        return ResponseEntity.ok(authService.login(loginDto));
     }
 
     /* Register user */
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserEntity userDto) {
-        return ResponseEntity.ok("token :"+authService.register(userDto).getToken());
+    public ResponseEntity<Map<String, String>> register(@RequestBody UserEntity userDto) {
+        return ResponseEntity.ok(authService.register(userDto));
     }
 
     /* Display "Me" page after Login and Register */
     @GetMapping("/me")
-    public ResponseEntity<String> me() {
-        return ResponseEntity.ok("welcome on me page");
+    public ResponseEntity<Map<String, Object>> me(@RequestHeader("Authorization") String authorization) {
+        return ResponseEntity.ok(authService.me(authorization));
     }
 }

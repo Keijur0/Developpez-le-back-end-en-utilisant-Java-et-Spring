@@ -1,5 +1,7 @@
 package com.chatop.api.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -22,8 +24,11 @@ public class RentalService {
     }
 
     /* Get all rentals */
-    public Iterable<Rental> getRentals() {
-        return rentalRepository.findAll();
+    public Map<String, Iterable<Rental>> getRentals() {
+        Iterable<Rental> allRentals =  rentalRepository.findAll();
+        Map<String, Iterable<Rental>> rentalsResponse = new HashMap<>();
+        rentalsResponse.put("rentals", allRentals);
+        return rentalsResponse;
     }
 
     /* Create/Update rental */
