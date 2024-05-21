@@ -3,14 +3,16 @@ package com.chatop.api.service;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.chatop.api.dto.LoginDto;
+import com.chatop.api.dto.MeDto;
 import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.UserRepository;
 
@@ -31,7 +33,6 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
-
     }
 
     /* Register user */
@@ -90,12 +91,17 @@ public class AuthService {
         return loginResponse;
     }
 
-    public Optional<UserEntity> me(String authorization) {
-        /* Get token after "Bearer " */
-        String token = authorization.substring(7);
-        String email = jwtService.extractUsername(token);
-        Optional<UserEntity> user = userRepository.findByEmail(email);
-        return user;
+    public MeDto me() {
+        /* Get auth info to get user's email */
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
+        MeDto meDto = new MeDto();
+        meDto.setName(user.getName());
+        meDto.setEmail(user.getEmail());
+        meDto.setCreated_at(user.getCreated_at());
+        meDto.setUpdated_at(user.getUpdated_at());
+        return meDto;
     }
 
 }

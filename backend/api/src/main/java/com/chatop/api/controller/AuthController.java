@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chatop.api.dto.LoginDto;
+import com.chatop.api.dto.MeDto;
 import com.chatop.api.model.UserEntity;
 import com.chatop.api.service.AuthService;
 
@@ -41,7 +42,7 @@ public class AuthController {
 
     /* Display "Me" page after Login and Register */
     @GetMapping("/me")
-    public ResponseEntity<Optional<UserEntity>> me(@RequestHeader("Authorization") String authorization) {
-        return ResponseEntity.ok(authService.me(authorization));
+    public ResponseEntity<MeDto> me() {
+        return ResponseEntity.ok(authService.me());
     }
 }
