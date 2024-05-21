@@ -1,9 +1,8 @@
 package com.chatop.api.controller;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +41,7 @@ public class AuthController {
 
     /* Display "Me" page after Login and Register */
     @GetMapping("/me")
-    public ResponseEntity<Map<String, Object>> me(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<Optional<UserEntity>> me(@RequestHeader("Authorization") String authorization) {
         return ResponseEntity.ok(authService.me(authorization));
     }
 }

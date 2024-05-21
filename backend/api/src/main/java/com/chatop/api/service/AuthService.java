@@ -3,15 +3,14 @@ package com.chatop.api.service;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.chatop.api.dto.LoginDto;
-import com.chatop.api.model.AuthResponse;
 import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.UserRepository;
 
@@ -57,8 +56,8 @@ public class AuthService {
         /* Getting current date and time */
         long timeStampInMillis = System.currentTimeMillis();
         Timestamp timeStampNow = new Timestamp(timeStampInMillis);
-        user.setCreatedAt(timeStampNow);
-        user.setUpdatedAt(timeStampNow);
+        user.setCreated_at(timeStampNow);
+        user.setUpdated_at(timeStampNow);
 
         /* Save user in DB */
         userRepository.save(user);
@@ -91,19 +90,12 @@ public class AuthService {
         return loginResponse;
     }
 
-    public Map<String, Object> me(String authorization) {
+    public Optional<UserEntity> me(String authorization) {
+        /* Get token after "Bearer " */
         String token = authorization.substring(7);
         String email = jwtService.extractUsername(token);
-        UserEntity user = userRepository.findByEmail(email).orElseThrow();
-
-        Map<String, Object> meResponse = new HashMap<>();
-        meResponse.put("id", user.getId());
-        meResponse.put("name", user.getName());
-        meResponse.put("email", user.getEmail());
-        meResponse.put("created_at", user.getCreatedAt());
-        meResponse.put("updated_at", user.getUpdatedAt());
-
-        return meResponse;
+        Optional<UserEntity> user = userRepository.findByEmail(email);
+        return user;
     }
 
 }

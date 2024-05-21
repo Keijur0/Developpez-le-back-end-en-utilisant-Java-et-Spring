@@ -24,7 +24,9 @@ public class JwtService {
 
     /* Extracting username (email in our case) from claims */
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        Claims claims = extractAllClaims(token);
+        String username = claims.getSubject();
+        return username;
     }
 
     /* Checking if token is valid, or still valid */
@@ -39,15 +41,21 @@ public class JwtService {
     }
 
     /* Extracting expiration date/time from claims */
+/*     private Date extractExpiration(String token) {
+        Date expiration = extractClaim(token, Claims::getExpiration);
+        return expiration;
+    } */
     private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        Claims claims = extractAllClaims(token);
+        Date expiration = claims.getExpiration();
+        return expiration;
     }
 
     /* Method to extract a specific claim from claims */
-    public <T> T extractClaim(String token, Function<Claims, T> resolver) {
+/*     public <T> T extractClaim(String token, Function<Claims, T> resolver) {
         Claims claims = extractAllClaims(token);
         return resolver.apply(claims);
-    }
+    } */
 
     /* Extracting all claims from token */
     private Claims extractAllClaims(String token) {
@@ -62,7 +70,7 @@ public class JwtService {
     public String generateToken(UserEntity user) {
         String username = user.getEmail();
         Date currentDate = new Date(System.currentTimeMillis());
-        Date expireDate = new Date(System.currentTimeMillis() + 24*60*60*1000);
+        Date expireDate = new Date(System.currentTimeMillis() + 24*60*60*1000); /* 1 day in milliseconds */
 
         String token = Jwts.builder()
             .subject(username)

@@ -1,6 +1,7 @@
 package com.chatop.api.model;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,9 +35,9 @@ public class Message {
     private String message;
 
     @Column(name="created_at")
-    private Timestamp createdAt;
+    private Date createdAt;
 
     @Column(name="updated_at")
-    private Timestamp updatedAt;
+    private Date updatedAt;
 
 }
