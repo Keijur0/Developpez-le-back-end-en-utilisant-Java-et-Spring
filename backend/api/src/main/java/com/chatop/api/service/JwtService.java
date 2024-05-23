@@ -1,7 +1,6 @@
 package com.chatop.api.service;
 
 import java.util.Date;
-import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
@@ -40,22 +39,11 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    /* Extracting expiration date/time from claims */
-/*     private Date extractExpiration(String token) {
-        Date expiration = extractClaim(token, Claims::getExpiration);
-        return expiration;
-    } */
     private Date extractExpiration(String token) {
         Claims claims = extractAllClaims(token);
         Date expiration = claims.getExpiration();
         return expiration;
     }
-
-    /* Method to extract a specific claim from claims */
-/*     public <T> T extractClaim(String token, Function<Claims, T> resolver) {
-        Claims claims = extractAllClaims(token);
-        return resolver.apply(claims);
-    } */
 
     /* Extracting all claims from token */
     private Claims extractAllClaims(String token) {

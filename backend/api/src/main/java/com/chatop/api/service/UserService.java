@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.chatop.api.dto.UserDto;
 import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.UserRepository;
 
@@ -17,29 +18,22 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    /* Create/Update user */
-    public UserEntity saveUser (UserEntity user) {
-        UserEntity createdUser = userRepository.save(user);
-        return createdUser;
+    /* Convert UserEntity to UserDto */
+
+    private UserDto toDto(UserEntity user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        userDto.setEmail(user.getEmail());
+        userDto.setCreated_at(user.getCreated_at());
+        userDto.setUpdated_at(user.getUpdated_at());
+        return userDto;
     }
 
     /* Get user by id */
-    public Optional<UserEntity> getUserById(final Long id) {
-        return userRepository.findById(id);
-    }
-
-    /* Delete user by id */
-    public void deleteUser(final Long id) {
-        userRepository.deleteById(id);
-    }
-
-    /* Get all users */
-    public Iterable<UserEntity> getUsers() {
-        return userRepository.findAll();
-    }
-
-    /* Get user by email */
-    public Optional<UserEntity> getUserByEmail(final String email) {
-        return userRepository.findByEmail(email);
+    public UserDto getUserById(final Long id) {
+        UserEntity user = userRepository.findById(id).orElseThrow();
+        UserDto userDto = toDto(user);
+        return userDto;
     }
 }

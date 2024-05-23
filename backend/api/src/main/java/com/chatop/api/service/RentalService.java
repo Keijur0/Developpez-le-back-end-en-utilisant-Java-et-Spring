@@ -1,13 +1,21 @@
 package com.chatop.api.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.chatop.api.dto.RentalDto;
 import com.chatop.api.model.Rental;
@@ -19,14 +27,15 @@ import com.chatop.api.repository.UserRepository;
 public class RentalService {
 
     private final UserRepository userRepository;
-    private final JwtService jwtService;
     private final RentalRepository rentalRepository;
 
-    public RentalService(UserRepository userRepository, JwtService jwtService, RentalRepository rentalRepository) {
+    public RentalService(UserRepository userRepository, RentalRepository rentalRepository) {
         this.userRepository = userRepository;
-        this.jwtService = jwtService;
         this.rentalRepository = rentalRepository;
     }
+
+    @Value("${pictures.path}")
+    private  String picsUploadDir;
 
     /* Convert a Rental object to a RentalDto object */
     private RentalDto toDto(Rental rental) {
@@ -58,34 +67,45 @@ public class RentalService {
             RentalDto rentalDto = toDto(rental);
             allRentalsDto.add(rentalDto);
         }
+        /* Formatting response */
         Map<String, Iterable<RentalDto>> rentalsResponse = new HashMap<>();
         rentalsResponse.put("rentals", allRentalsDto);
         return rentalsResponse;
     }
 
     /* Create rental */
-    public void saveRental(String authorization, String name, int surface, int price, String picture, String description) {
+    public void saveRental(String name, int surface, int price, MultipartFile picture, String description) throws IOException {
 
-        /* Extracting email from token to fill ownerId column */
-        String token = authorization.substring(7);
-        String email = jwtService.extractUsername(token);
+        /* Extracting email from security context */
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
         UserEntity user = userRepository.findByEmail(email).orElseThrow();
 
-        Rental rental = new Rental();
-        rental.setUser(user);
-        rental.setName(name);
-        rental.setSurface(surface);
-        rental.setPrice(price);
-        rental.setPicture(picture);
-        rental.setDescription(description);
+        try {
+            /* Save the picture */
+            byte[] bytes = picture.getBytes();
+            Path path = Paths.get(picsUploadDir + picture.getOriginalFilename());
+            Files.write(path, bytes);
+            String picPath = "api/" + picsUploadDir + picture.getOriginalFilename();
+            Rental rental = new Rental();
+            rental.setUser(user);
+            rental.setName(name);
+            rental.setSurface(surface);
+            rental.setPrice(price);
+            rental.setPicture(picPath);
+            rental.setDescription(description);
 
-        /* Getting current date and time */
-        long timeStampInMillis = System.currentTimeMillis();
-        Timestamp timeStampNow = new Timestamp(timeStampInMillis);
-        rental.setCreated_at(timeStampNow);
-        rental.setUpdated_at(timeStampNow);
+            /* Getting current date and time */
+            long timeStampInMillis = System.currentTimeMillis();
+            Timestamp timeStampNow = new Timestamp(timeStampInMillis);
+            rental.setCreated_at(timeStampNow);
+            rental.setUpdated_at(timeStampNow);
 
-        rentalRepository.save(rental);
+            rentalRepository.save(rental);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /* Delete rental by id */
@@ -94,8 +114,30 @@ public class RentalService {
     }
 
     /* Update rental */
-    public Rental updateRental(Long id, Rental rentalDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateRental'");
+    public void updateRental(Long id, String name, int surface, int price, String description) {
+        /* Find original rental */
+        Rental rental = rentalRepository.findById(id).orElseThrow();
+
+        /* Compare values and update if they changed */
+        if(name != rental.getName()) {
+            rental.setName(name);
+            rental.setUpdated_at(new Date());
+        }
+        if(surface != rental.getSurface()) {
+            rental.setSurface(surface);
+            rental.setUpdated_at(new Date());
+        }
+        if(price != rental.getPrice()) {
+            rental.setPrice(price);
+            rental.setUpdated_at(new Date());
+        }
+        if(description != rental.getDescription()) {
+            rental.setDescription(description);
+            rental.setUpdated_at(new Date());
+        }
+
+        /* Save changes */
+        rentalRepository.save(rental);
     }
+
 }

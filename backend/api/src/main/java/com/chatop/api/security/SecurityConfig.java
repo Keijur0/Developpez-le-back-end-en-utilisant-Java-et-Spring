@@ -20,9 +20,17 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthFilter jwtAuthenticationFilter) {
+    private final CustomAuthEntryPoint authEntryPoint;
+
+    private final CustomAccessDeniedHandler accessDeniedHandler;
+
+
+    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthFilter jwtAuthenticationFilter,
+            CustomAuthEntryPoint authEntryPoint, CustomAccessDeniedHandler accessDeniedHandler) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.authEntryPoint = authEntryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Bean
@@ -35,6 +43,10 @@ public class SecurityConfig {
                 auth.requestMatchers("/api/auth/register", "/api/auth/login").permitAll();
                 auth.anyRequest().authenticated();
             }).userDetailsService(userDetailsService)
+            .exceptionHandling(exception -> {
+                exception.authenticationEntryPoint(authEntryPoint);
+                exception.accessDeniedHandler(accessDeniedHandler);
+            })
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }

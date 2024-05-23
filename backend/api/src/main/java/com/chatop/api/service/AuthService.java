@@ -37,15 +37,18 @@ public class AuthService {
 
     /* Register user */
     public Map<String, String> register(UserEntity userDto) {
+        /* Formatting return value for response */
+        Map<String, String> registerReponse = new HashMap<>();
+
         /* Check email (must be unique) */
         if(!userRepository.findByEmail(userDto.getEmail()).isEmpty()) {
-            return null;
-            /* return new ResponseEntity<>("This email address is already used", HttpStatus.BAD_REQUEST); */
+            registerReponse.put("message", "This email address is already used");
+            return registerReponse;
         }
         /* Check fields */
         if(userDto.getName().isEmpty() || userDto.getEmail().isEmpty() || userDto.getPassword().isEmpty()) {
-            return null;
-            /* return new ResponseEntity<>("Some fields are empty", HttpStatus.BAD_REQUEST); */
+            registerReponse.put("message", "Some fields are empty");
+            return registerReponse;
         }
 
         /* Create new user */
@@ -66,27 +69,34 @@ public class AuthService {
         /* Generating token */
         String token = jwtService.generateToken(user);
 
-        /* Formatting return value for response */
-        Map<String, String> registerReponse = new HashMap<>();
+
+
         registerReponse.put("token", token);
 
         return registerReponse;
     }
 
     /* Login user */
-    public Map<String, String> login(LoginDto userDto) {
+    public Map<String, String> login(LoginDto loginDto) {
+        Map<String, String> loginResponse = new HashMap<>();
+
+        /* Checking if both fields have been filled */
+        if(loginDto.getEmail() == null && loginDto.getPassword() == null) {
+            loginResponse.put("message", "error");
+            return loginResponse;
+        }
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                userDto.getEmail(), 
-                userDto.getPassword())
+                loginDto.getEmail(), 
+                loginDto.getPassword())
         );
 
         /* Checking if user is matching with db */
-        UserEntity user = userRepository.findByEmail(userDto.getEmail()).orElseThrow();
+        UserEntity user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow();
         String token = jwtService.generateToken(user);
 
         /* Formatting return value for response */
-        Map<String, String> loginResponse = new HashMap<>();
+        
         loginResponse.put("token", token);
         return loginResponse;
     }
