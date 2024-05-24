@@ -40,10 +40,11 @@ public class SecurityConfig {
             .sessionManagement(sessionManagement -> 
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> {
-                auth.requestMatchers("/api/pictures/**").anonymous();
+                auth.requestMatchers("/api/pictures/**").permitAll();
                 auth.requestMatchers("/api/auth/register", "/api/auth/login").permitAll();
                 auth.anyRequest().authenticated();
-            }).userDetailsService(userDetailsService)
+            })
+            .userDetailsService(userDetailsService)
             .exceptionHandling(exception -> {
                 exception.authenticationEntryPoint(authEntryPoint);
                 exception.accessDeniedHandler(accessDeniedHandler);

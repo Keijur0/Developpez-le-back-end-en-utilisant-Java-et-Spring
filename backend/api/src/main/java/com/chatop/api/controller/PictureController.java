@@ -3,6 +3,7 @@ package com.chatop.api.controller;
 import java.net.MalformedURLException;
 
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,21 +23,20 @@ public class PictureController {
         this.pictureService = pictureService;
     }
 
-    @GetMapping("/api/pictures/{filename}")
+    @GetMapping("/api/pictures/{fileName}")
     @ResponseBody
-    public ResponseEntity<Resource> getPicture(@PathVariable String fileName) {
-        /* Checking image type */
-        MediaType contentType = fileName.toLowerCase().endsWith("jpg") ? 
-            MediaType.IMAGE_JPEG : MediaType.IMAGE_PNG;
+    public ResponseEntity<Resource> getPicture(@PathVariable String fileName) throws MalformedURLException {
+
+        Resource resource = pictureService.getPicture(fileName);
         try {
-            if (pictureService.getPicture(fileName) != null) {
+            if (resource.exists() && resource.isReadable()) {
                 return ResponseEntity.ok()
-                    .contentType(contentType)
-                    .body(pictureService.getPicture(fileName));
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename())
+                    .body(resource);
             } else {
                 return ResponseEntity.notFound().build();
             }       
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
          
