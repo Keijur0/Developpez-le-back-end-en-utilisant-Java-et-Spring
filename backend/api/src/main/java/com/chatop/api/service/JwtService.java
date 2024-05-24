@@ -55,8 +55,8 @@ public class JwtService {
     }
 
     /* Generating token */
-    public String generateToken(UserEntity user) {
-        String username = user.getEmail();
+    public String generateToken(UserDetails userDetails) {
+        String username = userDetails.getUsername();
         Date currentDate = new Date(System.currentTimeMillis());
         Date expireDate = new Date(System.currentTimeMillis() + 24*60*60*1000); /* 1 day in milliseconds */
 

@@ -1,18 +1,19 @@
 package com.chatop.api.service;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.chatop.api.dto.LoginDto;
-import com.chatop.api.dto.MeDto;
+import com.chatop.api.dto.UserDto;
+import com.chatop.api.model.AuthResponse;
 import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.UserRepository;
 
@@ -27,29 +28,33 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
 
+    private final UserDetailsService userDetailsService;
+
+
     public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService,
-            AuthenticationManager authenticationManager) {
+            AuthenticationManager authenticationManager, UserDetailsService userDetailsService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
     }
 
     /* Register user */
-    public Map<String, String> register(UserEntity userDto) {
+    public AuthResponse register(UserEntity userDto) {
         /* Formatting return value for response */
-        Map<String, String> registerReponse = new HashMap<>();
+        /* Map<String, String> registerReponse = new HashMap<>(); */
 
         /* Check email (must be unique) */
-        if(!userRepository.findByEmail(userDto.getEmail()).isEmpty()) {
+/*         if(!userRepository.findByEmail(userDto.getEmail()).isEmpty()) {
             registerReponse.put("message", "This email address is already used");
             return registerReponse;
-        }
+        } */
         /* Check fields */
-        if(userDto.getName().isEmpty() || userDto.getEmail().isEmpty() || userDto.getPassword().isEmpty()) {
+/*         if(userDto.getName().isEmpty() || userDto.getEmail().isEmpty() || userDto.getPassword().isEmpty()) {
             registerReponse.put("message", "Some fields are empty");
             return registerReponse;
-        }
+        } */
 
         /* Create new user */
         UserEntity user = new UserEntity();
@@ -66,52 +71,45 @@ public class AuthService {
         /* Save user in DB */
         userRepository.save(user);
 
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+
         /* Generating token */
-        String token = jwtService.generateToken(user);
+        String token = jwtService.generateToken(userDetails);
 
+        AuthResponse authResponse = new AuthResponse(token);
 
-
-        registerReponse.put("token", token);
-
-        return registerReponse;
+        return authResponse;
     }
 
     /* Login user */
-    public Map<String, String> login(LoginDto loginDto) {
-        Map<String, String> loginResponse = new HashMap<>();
-
-        /* Checking if both fields have been filled */
-        if(loginDto.getEmail() == null && loginDto.getPassword() == null) {
-            loginResponse.put("message", "error");
-            return loginResponse;
-        }
+    public AuthResponse login(LoginDto loginDto) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginDto.getEmail(), 
                 loginDto.getPassword())
         );
 
-        /* Checking if user is matching with db */
-        UserEntity user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow();
-        String token = jwtService.generateToken(user);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getEmail());
+        String token = jwtService.generateToken(userDetails);
 
         /* Formatting return value for response */
         
-        loginResponse.put("token", token);
-        return loginResponse;
+        AuthResponse authResponse = new AuthResponse(token);
+        return authResponse;
     }
 
-    public MeDto me() {
+    public UserDto me() {
         /* Get auth info to get user's email */
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         UserEntity user = userRepository.findByEmail(email).orElseThrow();
-        MeDto meDto = new MeDto();
-        meDto.setName(user.getName());
-        meDto.setEmail(user.getEmail());
-        meDto.setCreated_at(user.getCreated_at());
-        meDto.setUpdated_at(user.getUpdated_at());
-        return meDto;
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        userDto.setEmail(user.getEmail());
+        userDto.setCreated_at(user.getCreated_at());
+        userDto.setUpdated_at(user.getUpdated_at());
+        return userDto;
     }
 
 }

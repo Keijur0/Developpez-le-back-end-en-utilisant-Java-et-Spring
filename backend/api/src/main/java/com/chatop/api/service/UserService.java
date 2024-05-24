@@ -1,7 +1,5 @@
 package com.chatop.api.service;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import com.chatop.api.dto.UserDto;
@@ -19,7 +17,6 @@ public class UserService {
     }
 
     /* Convert UserEntity to UserDto */
-
     private UserDto toDto(UserEntity user) {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());

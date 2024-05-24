@@ -3,7 +3,6 @@ package com.chatop.api.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.chatop.api.dto.RentalDto;
+import com.chatop.api.dto.RentalsDto;
 import com.chatop.api.service.RentalService;
 
 @RestController
@@ -27,14 +27,14 @@ public class RentalController {
 
     /* Get all rentals */
     @GetMapping("/api/rentals")
-    public ResponseEntity<Map<String, Iterable<RentalDto>>> getRentals() {
+    public ResponseEntity<RentalsDto> getRentals() {
         return ResponseEntity.ok(rentalService.getRentals());
     }
 
     /* Get rental by id */
     @GetMapping("/api/rentals/{id}")
     public ResponseEntity<RentalDto> getRental(@PathVariable final Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(rentalService.getRental(id));
+        return ResponseEntity.ok(rentalService.getRental(id));
     }
 
     /* Create rental */
@@ -64,6 +64,7 @@ public class RentalController {
             @RequestParam int price,
             @RequestParam String description) {
                 Map<String, String> rentalResponse = new HashMap<>();
+                rentalService.updateRental(id, name, surface, price, description);
                 rentalResponse.put("message", "Rental updated !");
                 return ResponseEntity.ok(rentalResponse);
     }

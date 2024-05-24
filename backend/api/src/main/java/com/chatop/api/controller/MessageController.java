@@ -23,19 +23,12 @@ public class MessageController {
     @PostMapping("/api/messages")
     public ResponseEntity<Map<String, String>> sendMessage(@RequestBody MessageDto msgDto) {
         Map<String, String> messageResponse = new HashMap<>();
-
-        /* 401 unauthorized (not auth) */
-
-
-        /* 400 bad request (empty) */
         if(msgDto.getRental_id() == null || msgDto.getMessage() == null) {
             messageResponse.put("message", "At least one field is empty");
             return ResponseEntity.badRequest().body(messageResponse);
-        } else {
-        /* 200 ok */
-            messageService.saveMessage(msgDto);
-            messageResponse.put("message", "Message send with success");
-            return ResponseEntity.ok(messageResponse);
         }
+        messageService.saveMessage(msgDto);
+        messageResponse.put("message", "Message sent with success");
+        return ResponseEntity.ok(messageResponse);
     }
 }

@@ -7,9 +7,6 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.chatop.api.dto.RentalDto;
+import com.chatop.api.dto.RentalsDto;
 import com.chatop.api.model.Rental;
 import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.RentalRepository;
@@ -35,7 +33,10 @@ public class RentalService {
     }
 
     @Value("${pictures.path}")
-    private  String picsUploadDir;
+    private String picsUploadDir;
+
+    @Value("${pictures.db.path}")
+    private String picsDbPath;
 
     /* Convert a Rental object to a RentalDto object */
     private RentalDto toDto(Rental rental) {
@@ -46,7 +47,7 @@ public class RentalService {
         rentalDto.setPrice(rental.getPrice());
         rentalDto.setPicture(rental.getPicture());
         rentalDto.setDescription(rental.getDescription());
-        rentalDto.setOwnerId(rental.getUser().getId());
+        rentalDto.setOwner_id(rental.getUser().getId());
         rentalDto.setCreated_at(rental.getCreated_at());
         rentalDto.setUpdated_at(rental.getUpdated_at());
         return rentalDto;
@@ -60,17 +61,17 @@ public class RentalService {
     }
 
     /* Get all rentals */
-    public Map<String, Iterable<RentalDto>> getRentals() {
+    public RentalsDto getRentals() {
         Iterable<Rental> allRentals =  rentalRepository.findAll();
-        List<RentalDto> allRentalsDto = new ArrayList<>();
+        ArrayList<RentalDto> allRentalsDto = new ArrayList<>();
         for (Rental rental : allRentals) {
             RentalDto rentalDto = toDto(rental);
             allRentalsDto.add(rentalDto);
         }
         /* Formatting response */
-        Map<String, Iterable<RentalDto>> rentalsResponse = new HashMap<>();
-        rentalsResponse.put("rentals", allRentalsDto);
-        return rentalsResponse;
+        RentalsDto rentalsDto = new RentalsDto();
+        rentalsDto.setRentals(allRentalsDto);
+        return rentalsDto;
     }
 
     /* Create rental */
@@ -86,7 +87,7 @@ public class RentalService {
             byte[] bytes = picture.getBytes();
             Path path = Paths.get(picsUploadDir + picture.getOriginalFilename());
             Files.write(path, bytes);
-            String picPath = "api/" + picsUploadDir + picture.getOriginalFilename();
+            String picPath = picsDbPath + picture.getOriginalFilename();
             Rental rental = new Rental();
             rental.setUser(user);
             rental.setName(name);
@@ -106,11 +107,6 @@ public class RentalService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /* Delete rental by id */
-    public void deleteRental(final Long id) {
-        rentalRepository.deleteById(id);
     }
 
     /* Update rental */

@@ -19,7 +19,7 @@ public class RentalDto {
 
     private String description;
 
-    private Long ownerId;
+    private Long owner_id;
 
     private Date created_at;
 
