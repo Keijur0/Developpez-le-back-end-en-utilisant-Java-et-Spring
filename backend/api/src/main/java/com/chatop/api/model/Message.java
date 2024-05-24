@@ -1,6 +1,6 @@
 package com.chatop.api.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,20 +23,20 @@ public class Message {
 
     /* References to Rental id */
     @ManyToOne
-    @JoinColumn(name="rental_id")
+    @JoinColumn(name="rental_id", referencedColumnName = "id")
     private Rental rental;
 
     /* References to User id */
     @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
+    @JoinColumn(name="user_id", referencedColumnName = "id")
+    private UserEntity user;
 
     private String message;
 
     @Column(name="created_at")
-    private Timestamp createdAt;
+    private Date createdAt;
 
     @Column(name="updated_at")
-    private Timestamp updatedAt;
+    private Date updatedAt;
 
 }

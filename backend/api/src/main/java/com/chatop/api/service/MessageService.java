@@ -1,22 +1,35 @@
 package com.chatop.api.service;
 
+import java.util.Date;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.chatop.api.dto.MessageDto;
 import com.chatop.api.model.Message;
+import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.MessageRepository;
+import com.chatop.api.repository.RentalRepository;
+import com.chatop.api.repository.UserRepository;
 
-import lombok.Data;
-
-@Data
 @Service
 public class MessageService {
 
-    @Autowired
-    private MessageRepository messageRepository;
+    private final MessageRepository messageRepository;
+
+    private final RentalRepository rentalRepository;
+
+    private final UserRepository userRepository;
     
+    public MessageService(MessageRepository messageRepository, RentalRepository rentalRepository,
+            UserRepository userRepository) {
+        this.messageRepository = messageRepository;
+        this.rentalRepository = rentalRepository;
+        this.userRepository = userRepository;
+    }
+
     /* Get message by id */
     public Optional<Message> getMessage(final Long id) {
         return messageRepository.findById(id);
@@ -27,10 +40,24 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
-    /* Create/Update message */
-    public Message saveMessage(Message message) {
-        Message savedMessage = messageRepository.save(message);
-        return savedMessage;
+    /* Create message */
+    public void saveMessage(MessageDto msgDto) {
+        Message msg = new Message();
+
+        /* Identifying user who sent the message */
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
+
+        /* Building message */
+        msg.setRental(rentalRepository.findById(msgDto.getRental_id()).orElseThrow());
+        msg.setUser(userRepository.findById(user.getId()).orElseThrow());
+        msg.setMessage(msgDto.getMessage());
+        msg.setCreatedAt(new Date());
+        msg.setUpdatedAt(new Date());
+
+        /* Saving message */
+        messageRepository.save(msg);
     }
 
     /* Delete message by id */

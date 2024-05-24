@@ -1,45 +1,36 @@
 package com.chatop.api.service;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.chatop.api.model.User;
+import com.chatop.api.dto.UserDto;
+import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.UserRepository;
 
-import lombok.Data;
 
-@Data
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
 
-    /* Create/Update user */
-    public User saveUser (User user) {
-        User createdUser = userRepository.save(user);
-        return createdUser;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    /* Convert UserEntity to UserDto */
+    private UserDto toDto(UserEntity user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        userDto.setEmail(user.getEmail());
+        userDto.setCreated_at(user.getCreated_at());
+        userDto.setUpdated_at(user.getUpdated_at());
+        return userDto;
     }
 
     /* Get user by id */
-    public Optional<User> getUserById(final Long id) {
-        return userRepository.findById(id);
-    }
-
-    /* Delete user by id */
-    public void deleteUser(final Long id) {
-        userRepository.deleteById(id);
-    }
-
-    /* Get all users */
-    public Iterable<User> getUsers() {
-        return userRepository.findAll();
-    }
-
-    /* Get user by email */
-    public Optional<User> getUserByEmail(final String email) {
-        return userRepository.findByEmail(email);
+    public UserDto getUserById(final Long id) {
+        UserEntity user = userRepository.findById(id).orElseThrow();
+        UserDto userDto = toDto(user);
+        return userDto;
     }
 }

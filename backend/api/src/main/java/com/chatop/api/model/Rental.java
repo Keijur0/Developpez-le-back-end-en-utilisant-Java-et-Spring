@@ -1,10 +1,8 @@
 package com.chatop.api.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,12 +32,10 @@ public class Rental {
 
     /* References to User id */
     @ManyToOne
-    @JoinColumn(name="owner_id")
-    private User ownerId;
+    @JoinColumn(name="owner_id", referencedColumnName = "id")
+    private UserEntity user;
 
-    @Column(name="created_at")
-    private Timestamp createdAt;
+    private Date created_at;
 
-    @Column(name="updated_at")
-    private Timestamp updatedAt;
+    private Date updated_at;
 }

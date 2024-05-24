@@ -1,6 +1,6 @@
 package com.chatop.api.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,12 +8,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +27,10 @@ public class User {
 
     private String password;
 
-    @Column(name="created_at")
-    private Timestamp createdAt;
+    private Date created_at;
 
-    @Column(name="updated_at")
-    private Timestamp updatedAt;
+    private Date updated_at;
 
+    @Transient
+    private final String role = "USER";
 }
