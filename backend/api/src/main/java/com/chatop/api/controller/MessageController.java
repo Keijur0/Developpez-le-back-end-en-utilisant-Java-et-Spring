@@ -1,17 +1,20 @@
 package com.chatop.api.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chatop.api.dto.MessageDto;
+import com.chatop.api.model.ResponseMsg;
 import com.chatop.api.service.MessageService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
+@Tag(name = "Message Endpoint")
 public class MessageController {
 
     private MessageService messageService;
@@ -20,15 +23,32 @@ public class MessageController {
         this.messageService = messageService;
     }
 
+    @Operation(
+        description = "This endpoints saves a message sent by a user to the owner of a rental",
+        summary = "Send a message to the owner of a rental",
+        responses = {
+            @ApiResponse(
+                description = "Success: Message sent",
+                responseCode = "200"
+            ),
+            @ApiResponse(
+                description = "Unauthorized: Missing or invalid token",
+                responseCode = "401"
+            )
+        }
+    )    
     @PostMapping("/api/messages")
-    public ResponseEntity<Map<String, String>> sendMessage(@RequestBody MessageDto msgDto) {
-        Map<String, String> messageResponse = new HashMap<>();
+    public ResponseEntity<ResponseMsg> sendMessage(@RequestBody MessageDto msgDto) {
+        ResponseMsg responseMsg = new ResponseMsg();
+        
+        /* Checking if any field is empty */
         if(msgDto.getRental_id() == null || msgDto.getMessage() == null) {
-            messageResponse.put("message", "At least one field is empty");
-            return ResponseEntity.badRequest().body(messageResponse);
+            
+            responseMsg.setMessage("At least one field is empty");
+            return ResponseEntity.badRequest().body(responseMsg);
         }
         messageService.saveMessage(msgDto);
-        messageResponse.put("message", "Message sent with success");
-        return ResponseEntity.ok(messageResponse);
+        responseMsg.setMessage("Message sent with success");
+        return ResponseEntity.ok(responseMsg);
     }
 }
