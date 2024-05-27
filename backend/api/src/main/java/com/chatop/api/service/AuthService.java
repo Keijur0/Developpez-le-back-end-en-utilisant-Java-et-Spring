@@ -1,6 +1,6 @@
 package com.chatop.api.service;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.chatop.api.dto.LoginDto;
+import com.chatop.api.dto.RegisterDto;
 import com.chatop.api.dto.UserDto;
 import com.chatop.api.model.AuthResponse;
 import com.chatop.api.model.UserEntity;
@@ -41,20 +42,7 @@ public class AuthService {
     }
 
     /* Register user */
-    public AuthResponse register(UserEntity userDto) {
-        /* Formatting return value for response */
-        /* Map<String, String> registerReponse = new HashMap<>(); */
-
-        /* Check email (must be unique) */
-/*         if(!userRepository.findByEmail(userDto.getEmail()).isEmpty()) {
-            registerReponse.put("message", "This email address is already used");
-            return registerReponse;
-        } */
-        /* Check fields */
-/*         if(userDto.getName().isEmpty() || userDto.getEmail().isEmpty() || userDto.getPassword().isEmpty()) {
-            registerReponse.put("message", "Some fields are empty");
-            return registerReponse;
-        } */
+    public AuthResponse register(RegisterDto userDto) {
 
         /* Create new user */
         UserEntity user = new UserEntity();
@@ -63,10 +51,8 @@ public class AuthService {
         user.setEmail(userDto.getEmail());
 
         /* Getting current date and time */
-        long timeStampInMillis = System.currentTimeMillis();
-        Timestamp timeStampNow = new Timestamp(timeStampInMillis);
-        user.setCreated_at(timeStampNow);
-        user.setUpdated_at(timeStampNow);
+        user.setCreated_at(new Date());
+        user.setUpdated_at(new Date());
 
         /* Save user in DB */
         userRepository.save(user);
@@ -93,13 +79,12 @@ public class AuthService {
         String token = jwtService.generateToken(userDetails);
 
         /* Formatting return value for response */
-        
         AuthResponse authResponse = new AuthResponse(token);
         return authResponse;
     }
 
     public UserDto me() {
-        /* Get auth info to get user's email */
+        /* Get security context to retrieve user's email */
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         UserEntity user = userRepository.findByEmail(email).orElseThrow();
