@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chatop.api.dto.LoginDto;
+import com.chatop.api.dto.RegisterDto;
 import com.chatop.api.dto.UserDto;
 import com.chatop.api.model.AuthResponse;
 import com.chatop.api.model.ResponseMsg;
-import com.chatop.api.model.UserEntity;
 import com.chatop.api.service.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,14 +65,14 @@ public class AuthController {
         }
     )        
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserEntity userDto) {
+    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
         /* Checking if any field is empty */
-        if(userDto.getEmail() == null || userDto.getName() == null || userDto.getPassword() == null) {
+        if(registerDto.getEmail() == null || registerDto.getName() == null || registerDto.getPassword() == null) {
             ResponseMsg responseMsg = new ResponseMsg();
             responseMsg.setMessage("At least one field is empty");
             return ResponseEntity.badRequest().body(responseMsg);
         }
-        return ResponseEntity.ok(authService.register(userDto));
+        return ResponseEntity.ok(authService.register(registerDto));
     }
 
     /* Display "Me" page after Login and Register */
