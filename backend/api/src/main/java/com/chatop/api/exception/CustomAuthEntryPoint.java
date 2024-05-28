@@ -1,4 +1,4 @@
-package com.chatop.api.security;
+package com.chatop.api.exception;
 
 import java.io.IOException;
 

@@ -12,6 +12,7 @@ import com.chatop.api.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @Tag(name = "Message Endpoint")
@@ -38,15 +39,8 @@ public class MessageController {
         }
     )    
     @PostMapping("/api/messages")
-    public ResponseEntity<ResponseMsg> sendMessage(@RequestBody MessageDto msgDto) {
+    public ResponseEntity<ResponseMsg> sendMessage(@Valid @RequestBody MessageDto msgDto) {
         ResponseMsg responseMsg = new ResponseMsg();
-        
-        /* Checking if any field is empty */
-        if(msgDto.getRental_id() == null || msgDto.getMessage() == null) {
-            
-            responseMsg.setMessage("At least one field is empty");
-            return ResponseEntity.badRequest().body(responseMsg);
-        }
         messageService.saveMessage(msgDto);
         responseMsg.setMessage("Message sent with success");
         return ResponseEntity.ok(responseMsg);

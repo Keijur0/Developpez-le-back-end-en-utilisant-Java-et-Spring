@@ -11,11 +11,11 @@ import com.chatop.api.dto.LoginDto;
 import com.chatop.api.dto.RegisterDto;
 import com.chatop.api.dto.UserDto;
 import com.chatop.api.model.AuthResponse;
-import com.chatop.api.model.ResponseMsg;
 import com.chatop.api.service.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -65,13 +65,13 @@ public class AuthController {
         }
     )        
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto) {
         /* Checking if any field is empty */
-        if(registerDto.getEmail() == null || registerDto.getName() == null || registerDto.getPassword() == null) {
+/*         if(registerDto.getEmail() == null || registerDto.getName() == null || registerDto.getPassword() == null) {
             ResponseMsg responseMsg = new ResponseMsg();
             responseMsg.setMessage("At least one field is empty");
             return ResponseEntity.badRequest().body(responseMsg);
-        }
+        } */
         return ResponseEntity.ok(authService.register(registerDto));
     }
 

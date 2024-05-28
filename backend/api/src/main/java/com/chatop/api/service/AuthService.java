@@ -18,6 +18,8 @@ import com.chatop.api.model.AuthResponse;
 import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.UserRepository;
 
+import jakarta.validation.Valid;
+
 @Service
 public class AuthService {
     
