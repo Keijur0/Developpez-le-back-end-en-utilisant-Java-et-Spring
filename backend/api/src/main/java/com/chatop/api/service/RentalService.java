@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.chatop.api.dto.RentalDto;
 import com.chatop.api.dto.RentalsDto;
+import com.chatop.api.mapper.RentalMapper;
 import com.chatop.api.model.Rental;
 import com.chatop.api.model.UserEntity;
 import com.chatop.api.repository.RentalRepository;
@@ -39,7 +40,7 @@ public class RentalService {
     private String picsDbPath;
 
     /* Convert a Rental object to a RentalDto object */
-    private RentalDto toDto(Rental rental) {
+/*     private RentalDto toDto(Rental rental) {
         RentalDto rentalDto = new RentalDto();
         rentalDto.setId(rental.getId());
         rentalDto.setName(rental.getName());
@@ -51,12 +52,12 @@ public class RentalService {
         rentalDto.setCreated_at(rental.getCreated_at());
         rentalDto.setUpdated_at(rental.getUpdated_at());
         return rentalDto;
-    }
+    } */
 
     /* Get rental by id */
     public RentalDto getRental(final Long id) {
         Rental rental = rentalRepository.findById(id).orElseThrow();
-        RentalDto rentalDto = toDto(rental);
+        RentalDto rentalDto = RentalMapper.INSTANCE.rentalToRentalDto(rental);
         return rentalDto;
     }
 
@@ -65,7 +66,7 @@ public class RentalService {
         Iterable<Rental> allRentals =  rentalRepository.findAll();
         ArrayList<RentalDto> allRentalsDto = new ArrayList<>();
         for (Rental rental : allRentals) {
-            RentalDto rentalDto = toDto(rental);
+            RentalDto rentalDto = RentalMapper.INSTANCE.rentalToRentalDto(rental);
             allRentalsDto.add(rentalDto);
         }
         /* Formatting response */
