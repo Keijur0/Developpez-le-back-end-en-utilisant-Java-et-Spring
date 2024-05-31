@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.chatop.api.dto.LoginDto;
 import com.chatop.api.dto.RegisterDto;
 import com.chatop.api.dto.UserDto;
+import com.chatop.api.mapper.RegisterMapper;
 import com.chatop.api.mapper.UserMapper;
 import com.chatop.api.model.AuthResponse;
 import com.chatop.api.model.UserEntity;
@@ -43,13 +44,12 @@ public class AuthService {
     }
 
     /* Register user */
-    public AuthResponse register(RegisterDto userDto) {
+    public AuthResponse register(RegisterDto registerDto) {
+        /* Encode password */
+        registerDto.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
         /* Create new user */
-        UserEntity user = new UserEntity();
-        user.setName(userDto.getName());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setEmail(userDto.getEmail());
+        UserEntity user = RegisterMapper.INSTANCE.registerDtoToUserEntity(registerDto);
 
         /* Getting current date and time */
         user.setCreated_at(new Date());
