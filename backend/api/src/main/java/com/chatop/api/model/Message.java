@@ -34,9 +34,9 @@ public class Message {
     private String message;
 
     @Column(name="created_at")
-    private Date createdAt;
+    private Date created_at;
 
     @Column(name="updated_at")
-    private Date updatedAt;
+    private Date updated_at;
 
 }

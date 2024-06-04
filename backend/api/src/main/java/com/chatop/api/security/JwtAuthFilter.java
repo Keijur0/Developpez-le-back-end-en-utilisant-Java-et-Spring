@@ -55,6 +55,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                             SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
+
+                    /* Or if token is expired, generate a new one */
+                    if(jwtService.isTokenExpired(token)) {
+                        String newToken = jwtService.generateToken(userDetails);
+                        response.setHeader("Authorization", "Bearer " + newToken);
+                    }
                 }
                 /* Passing to next filter */
                 filterChain.doFilter(request, response);

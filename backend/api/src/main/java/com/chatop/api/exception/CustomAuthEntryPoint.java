@@ -1,4 +1,4 @@
-package com.chatop.api.security;
+package com.chatop.api.exception;
 
 import java.io.IOException;
 
@@ -19,5 +19,4 @@ public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
     
-
 }
