@@ -82,6 +82,10 @@ Une fois effectué, placez-vous dans le dossier `/backend/api` du projet et tapp
 
 `mvn spring-boot:run`
 
+## Documentation Swagger de l'API
+
+`http://localhost:9000/swagger-ui.html`
+
 ## Lancer le projet Angular (Frontend)
 Pour lancer le projet Angular, placez-vous dans le dossier `frontend` du projet et tappez la commande:
 

@@ -39,20 +39,6 @@ public class RentalService {
     @Value("${pictures.db.path}")
     private String picsDbPath;
 
-    /* Convert a Rental object to a RentalDto object */
-/*     private RentalDto toDto(Rental rental) {
-        RentalDto rentalDto = new RentalDto();
-        rentalDto.setId(rental.getId());
-        rentalDto.setName(rental.getName());
-        rentalDto.setSurface(rental.getSurface());
-        rentalDto.setPrice(rental.getPrice());
-        rentalDto.setPicture(rental.getPicture());
-        rentalDto.setDescription(rental.getDescription());
-        rentalDto.setOwner_id(rental.getUser().getId());
-        rentalDto.setCreated_at(rental.getCreated_at());
-        rentalDto.setUpdated_at(rental.getUpdated_at());
-        return rentalDto;
-    } */
 
     /* Get rental by id */
     public RentalDto getRental(final Long id) {

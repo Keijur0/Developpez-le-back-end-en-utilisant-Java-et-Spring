@@ -93,13 +93,6 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-					<anotationProcessorPaths>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>1.5.5.Final</version>
-						</path>
-					</anotationProcessorPaths>
 				</configuration>
 			</plugin>
 		</plugins>

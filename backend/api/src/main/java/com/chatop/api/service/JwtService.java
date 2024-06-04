@@ -33,7 +33,7 @@ public class JwtService {
     }
 
     /* Checking if token has already expired */
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
@@ -64,7 +64,6 @@ public class JwtService {
             .expiration(expireDate)
             .signWith(getSigninKey())
             .compact();
-
         return token;
     }
 
@@ -73,7 +72,5 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-
 
 }

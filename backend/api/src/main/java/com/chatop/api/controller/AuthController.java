@@ -66,12 +66,6 @@ public class AuthController {
     )        
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto) {
-        /* Checking if any field is empty */
-/*         if(registerDto.getEmail() == null || registerDto.getName() == null || registerDto.getPassword() == null) {
-            ResponseMsg responseMsg = new ResponseMsg();
-            responseMsg.setMessage("At least one field is empty");
-            return ResponseEntity.badRequest().body(responseMsg);
-        } */
         return ResponseEntity.ok(authService.register(registerDto));
     }
 
