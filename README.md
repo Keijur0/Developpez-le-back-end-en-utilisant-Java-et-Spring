@@ -69,7 +69,7 @@ Puis tappez le mot de passe associé à ce compte utilisateur.
 ### Vérification de la base
 Pour vérifier si la base a été installée tappez:
 
-`mysql -u <nom d'utilisateur> -p` puis tappez le mot de passe pour vous connecter au serveur
+`mysql -u <nom d'utilisateur> -p` puis Validez. Ensuite tappez le `<mot de passe>` pour vous connecter au serveur
 
 `SHOW DATABASES;` pour vérifier si `chatop` se trouve parmi les bases existantes
 
@@ -90,7 +90,7 @@ La `Hex Key` sera la `<clé secrète>` dans la commande suivante.
 
 Une fois effectué, placez-vous dans le dossier `/backend/api` du projet et tappez la commande:
 
-`mvn spring-boot:run -Dspring-boot.run.arguments="--spring.datasource.username=`<nom d'utilisateur>` --spring.datasource.password=`<mot de passe>` --jwt.secret=`<clé secrète>`"`
+`mvn spring-boot:run -Dspring-boot.run.arguments="--spring.datasource.username=<nom d'utilisateur> --spring.datasource.password=<mot de passe> --jwt.secret=<clé secrète>"`
 
 ## Documentation Swagger de l'API
 
