@@ -69,7 +69,7 @@ Puis tappez le mot de passe associé à ce compte utilisateur.
 ### Vérification de la base
 Pour vérifier si la base a été installée tappez:
 
-`mysql -u <nom d'utilisateur> -p` puis tappez le mot de passe pour vous connecter au serveur
+`mysql -u <nom d'utilisateur> -p` puis Validez. Ensuite tappez le `<mot de passe>` pour vous connecter au serveur
 
 `SHOW DATABASES;` pour vérifier si `chatop` se trouve parmi les bases existantes
 
