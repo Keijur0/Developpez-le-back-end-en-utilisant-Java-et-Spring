@@ -46,6 +46,10 @@ Une fois effectué, aller dans l'invite de commandes et utilisez la commande sui
 
 Utilisez le nom d'utilisateur et le mot de passe que vous avez créé lors de l'installation de MySQL Server.
 
+Vous aurez besoin de ces identifiants lors du lancement de l'API. 
+
+Je nommerai ces éléments `<nom d'utilisateur>` et  `<mot de passe>` dans la commande de lancement.
+
 ### Créer la base de données
 Pour créer la base de données, utilisez la commande suivante:
 
@@ -78,9 +82,15 @@ Pour vérifier si la base a été installée tappez:
 ## Lancer le projet Java (API / Backend)
 Pour lancer le projet Java, il vous faut d'abord créer les variables d'environnement pour Java et Maven, pointant vers leurs dossiers respectifs `/bin`.
 
+Ensuite, vous aurez besoin de générer une clé secrète à partir de ce site: `https://asecuritysite.com/encryption/plain`.
+
+Choisissez une clé de `256-bit` et cliquez sur `Determine`.
+
+La `Hex Key` sera la `<clé secrète>` dans la commande suivante.
+
 Une fois effectué, placez-vous dans le dossier `/backend/api` du projet et tappez la commande:
 
-`mvn spring-boot:run`
+`mvn spring-boot:run -Dspring-boot.run.arguments="--spring.datasource.username=`<nom d'utilisateur>` --spring.datasource.password=`<mot de passe>` --jwt.secret=`<clé secrète>`"`
 
 ## Documentation Swagger de l'API
 
