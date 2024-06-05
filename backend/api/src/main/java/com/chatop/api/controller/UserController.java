@@ -22,6 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    /* Get user by id */
     @Operation(
         description = "This endpoint returns the current authenticated user using its id",
         summary = "Get the current user using its id",

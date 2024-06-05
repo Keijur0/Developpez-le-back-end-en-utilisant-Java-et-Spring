@@ -37,6 +37,7 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
+    /* Extracting the date and time of token's expiration */
     private Date extractExpiration(String token) {
         Claims claims = extractAllClaims(token);
         Date expiration = claims.getExpiration();
