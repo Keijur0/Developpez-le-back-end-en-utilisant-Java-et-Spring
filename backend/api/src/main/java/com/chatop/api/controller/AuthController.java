@@ -15,11 +15,13 @@ import com.chatop.api.service.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication Endpoint")
 public class AuthController {
 
     private final AuthService authService;
