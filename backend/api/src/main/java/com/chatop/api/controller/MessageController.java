@@ -24,6 +24,7 @@ public class MessageController {
         this.messageService = messageService;
     }
 
+    /* Sending a message */
     @Operation(
         description = "This endpoints saves a message sent by a user to the owner of a rental",
         summary = "Send a message to the owner of a rental",

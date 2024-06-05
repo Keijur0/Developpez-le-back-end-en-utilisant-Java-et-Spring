@@ -69,7 +69,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.register(registerDto));
     }
 
-    /* Display "Me" page after Login and Register */
+    /* Display "Me" page */
     @Operation(
         description = "Get the current authenticated user info to display them on /me page, using the security context",
         summary = "This endpoint returns the info of the current authenticated user, using the security context",
