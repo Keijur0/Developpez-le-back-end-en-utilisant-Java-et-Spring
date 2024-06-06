@@ -18,17 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class PictureService {
 
     @Value("${pictures.path}")
-    private String pictureLocation;
-
-    @Value("${pictures.path}")
-    private String picsUploadDir;
+    private String picsUploadPath;
 
     @Value("${pictures.db.path}")
     private String picsDbPath;
 
     /* Get picture to display on frontend */
     public Resource getPicture(String fileName) throws MalformedURLException {
-        Path filePath = Paths.get(pictureLocation).resolve(fileName).normalize();
+        Path filePath = Paths.get(picsUploadPath).resolve(fileName).normalize();
         Resource resource = new UrlResource(filePath.toUri());
         return resource;
     }
@@ -36,7 +33,7 @@ public class PictureService {
     /* Save a picture from frontend and defines path to save in DB */
     public String savePicture(MultipartFile picture) throws IOException {
         byte[] bytes = picture.getBytes();
-        Path path = Paths.get(picsUploadDir + picture.getOriginalFilename());
+        Path path = Paths.get(picsUploadPath + picture.getOriginalFilename());
         Files.write(path, bytes);
         String picPath = picsDbPath + picture.getOriginalFilename();
         return picPath;
