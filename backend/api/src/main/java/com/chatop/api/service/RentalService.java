@@ -1,14 +1,10 @@
 package com.chatop.api.service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,18 +23,15 @@ public class RentalService {
 
     private final UserRepository userRepository;
     private final RentalRepository rentalRepository;
+    private final PictureService pictureService;
 
-    public RentalService(UserRepository userRepository, RentalRepository rentalRepository) {
+
+    public RentalService(UserRepository userRepository, RentalRepository rentalRepository,
+            PictureService pictureService) {
         this.userRepository = userRepository;
         this.rentalRepository = rentalRepository;
+        this.pictureService = pictureService;
     }
-
-    @Value("${pictures.path}")
-    private String picsUploadDir;
-
-    @Value("${pictures.db.path}")
-    private String picsDbPath;
-
 
     /* Get rental by id */
     public RentalDto getRental(final Long id) {
@@ -71,10 +64,9 @@ public class RentalService {
 
         try {
             /* Save the picture */
-            byte[] bytes = picture.getBytes();
-            Path path = Paths.get(picsUploadDir + picture.getOriginalFilename());
-            Files.write(path, bytes);
-            String picPath = picsDbPath + picture.getOriginalFilename();
+            String picPath = pictureService.savePicture(picture);
+
+            /* Create new rental */
             Rental rental = new Rental();
             rental.setUser(user);
             rental.setName(name);
