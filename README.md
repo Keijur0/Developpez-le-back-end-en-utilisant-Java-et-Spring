@@ -37,6 +37,8 @@ Pour récupérer le projet, il est possible de télécharger le projet sur GitHu
 Décompresser l'archive (.zip) à l'emplacement souhaité si besoin.
 
 ## Mettre en place le serveur MySQL
+Lors de l'installation de MySQL Server, prenez soin de créer un compte qui ser autorisé à lire et écrire dans la base de données.
+
 Après avoir effectué l'installation de MySQL Server, il faut créer la variable d'environnement MySQL, qui pointe vers le répertoire `/bin` de MySQL Server.
 
 ### Se connecter à la base de données
